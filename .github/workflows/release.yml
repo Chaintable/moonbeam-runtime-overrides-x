@@ -1,6 +1,9 @@
 name: "Release new artifacts"
 
 on:
+  pull_request:
+    branches:
+      - "debank"
   workflow_dispatch:
 
 env:
