@@ -1,0 +1,56 @@
+name: "Release new artifacts"
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-1
+  REGISTRY: 294354037686.dkr.ecr.ap-northeast-1.amazonaws.com
+  IMAGE: moonbeam-x
+  DOCKERFILE: docker/moonbeam-tracing.Dockerfile
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        arch: [amd64]
+    runs-on: [self-hosted, "${{ matrix.arch }}"]
+    steps:
+      - name: Checkout Runtime
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set env
+        run: |
+          echo "REVISION=${GITHUB_SHA::8}" >> $GITHUB_ENV
+      
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.RELEASE_MANAGER_APP_ID }}
+          private_key: ${{ secrets.RELEASE_MANAGER_APP_SECRET }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set env
+        run: |
+          echo "REVISION=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+
+      - name: Docker build and push
+        run: |
+          mkdir -p moonbase-substitutes-tracing
+          cp wasm/moonbase-* moonbase-substitutes-tracing/
+          mkdir -p moonriver-substitutes-tracing
+          cp wasm/moonriver-* moonriver-substitutes-tracing/
+          mkdir -p moonbeam-substitutes-tracing
+          cp wasm/moonbeam-* moonbeam-substitutes-tracing/
+          docker build -t ${REGISTRY}/${IMAGE}:${{matrix.arch}}-${REVISION} -f ${DOCKERFILE} .
+          docker push ${REGISTRY}/${IMAGE}:${{matrix.arch}}-${REVISION}
