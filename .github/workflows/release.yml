@@ -17,7 +17,7 @@ jobs:
     runs-on: [self-hosted, "${{ matrix.arch }}"]
     steps:
       - name: Checkout Runtime
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
