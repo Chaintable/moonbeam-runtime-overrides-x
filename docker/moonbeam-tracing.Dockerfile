@@ -1,4 +1,4 @@
-FROM  294354037686.dkr.ecr.ap-northeast-1.amazonaws.com/moonbeam-x:amd64-f0f0f757 
+FROM  294354037686.dkr.ecr.ap-northeast-1.amazonaws.com/moonbeam-x:amd64-39acfd81  
 
 COPY moonbase-substitutes-tracing /moonbeam/moonbase-substitutes-tracing
 COPY moonriver-substitutes-tracing /moonbeam/moonriver-substitutes-tracing
