@@ -9,7 +9,7 @@ on:
 env:
   AWS_REGION: us-east-1
   REGISTRY: public.ecr.aws/b2h7a5c4/chaintable
-  IMAGE: moonbeam-tracing
+  IMAGE: moonbeam-x
   DOCKERFILE: docker/moonbeam-tracing.Dockerfile
 
 jobs:
