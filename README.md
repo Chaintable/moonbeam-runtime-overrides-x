@@ -1,3 +1,21 @@
+# Chaintable Moonbeam tracing runtime overrides
+
+> Companion to the [moonbeam-x](https://github.com/Chaintable/moonbeam-x) write node — the modified Moonbeam runtime WASMs that enable EVM transaction tracing for the [Chaintable pipeline](https://github.com/Chaintable/pipeline).
+> Fork of [moonbeam-foundation/moonbeam-runtime-overrides](https://github.com/moonbeam-foundation/moonbeam-runtime-overrides), with Chaintable patches.
+
+## Role
+
+Moonbeam is a Substrate / Polkadot parachain, so EVM tracing is **not** compiled into the node binary — it requires modified "tracing runtime" WASM loaded at startup (`--wasm-runtime-overrides`). This repo builds those tracing runtimes. CI layers them onto the [moonbeam-x](https://github.com/Chaintable/moonbeam-x) writer image and publishes the result to public ECR `public.ecr.aws/b2h7a5c4/chaintable/moonbeam-x`. Running the Moonbeam write node with these overrides lets it trace EVM transactions and feed tx / call-trace data to the Chaintable pipeline.
+
+```
+moonbeam-x writer image ──FROM──▶ this repo's tracing image (writer + tracing runtime WASM)
+                                          │  enables EVM trace RPC
+                                          ▼
+                          Moonbeam write node (producer) ──tx · call traces──▶ Chaintable pipeline
+```
+
+---
+
 # Moonbeam Runtime Overrides
 
 This repository contains rewrites of the moonbeam project runtimes, these rewrites allow some specialized nodes to run modified runtimes, for example for tracing purposes.
