@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - "main"
+  release:
+    types:
+      - created
+      - released
   workflow_dispatch:
 
 env:
@@ -32,7 +36,11 @@ jobs:
 
       - name: Set env
         run: |
-          echo "REVISION=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "REVISION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          else
+            echo "REVISION=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+          fi
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -69,7 +77,11 @@ jobs:
 
       - name: Set env
         run: |
-          echo "REVISION=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "REVISION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          else
+            echo "REVISION=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV
+          fi
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
