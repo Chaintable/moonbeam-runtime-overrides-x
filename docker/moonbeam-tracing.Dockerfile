@@ -1,4 +1,4 @@
-FROM  public.ecr.aws/b2h7a5c4/chaintable/moonriver-writer:75c58162
+FROM  public.ecr.aws/b2h7a5c4/chaintable/moonriver-writer:d88672e1
 
 COPY moonbase-substitutes-tracing /moonbeam/moonbase-substitutes-tracing
 COPY moonriver-substitutes-tracing /moonbeam/moonriver-substitutes-tracing
